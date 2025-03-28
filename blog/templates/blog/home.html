@@ -1,0 +1,41 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Hero Section -->
+<link rel="stylesheet" href="{% static 'blog/css/styles.css'%}">
+
+<div class="container">
+    <div class="row my-4">
+        <div class="col-md-12">
+            <div class="hero">
+                <h1 class="section">Mastering Modern Tech: Build, Innovate, and Lead</h1>
+                <h4 class="red">Explore the latest in software development, AI, and emerging tech trends.</h4>
+                <a href="#" class="btn btn-light" color="blue">Read More</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Articles -->
+<div class="container">
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-4">
+            <div class="card">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.content }}</p>
+                    <a href="{% url 'blog:post_detail' post.slug %}" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No posts available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

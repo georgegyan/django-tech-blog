@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Blog</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'blog:home' %}">Tech Blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'blog:home' %}">Latest Articles</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Popular</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Growth</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Culture</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Product</a></li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary" href="{% url 'blog:dashboard' %}">Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Block -->
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; 2025 Tech Blog. All rights reserved.</p>
+        <p>
+            <a href="{% url 'blog:home' %}" class="text-white">Home</a> |
+            <a href="#" class="text-white">About</a> |
+            <a href="#" class="text-white">Contact</a>
+        </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let images = [
+            "/static/images/image1.jpg",
+            "/static/images/image2.jpg",
+            "/static/images/image3.jpg",
+            "/static/images/image4.jpg",
+        ];
+        let index = 0;
+        function changeBackground () {
+            document.body.style.backgroundImage = `url(${images[index]})`;
+            index = (index + 1) % images.length;
+        }
+        setInterval(changeBackground, 5000)
+    </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+  <div class="card mb-4">
+      <div class="card-body">
+          <h1 class="card-title">{{ post.title }}</h1>
+          <p class="text-muted">By {{ post.author }} | {{ post.created_at|date:"F d, Y" }}</p>
+          {% if post.image %}
+              <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid" >
+          {% endif %}
+          <p class="card-text">{{ post.content | safe }}</p>
+          <a href="{% url 'blog:home' %}" class="btn btn-secondary">Back to Home</a>
+      </div>
+  </div>
+
+  <div class="mb-4">
+      <h3>Comments</h3>
+      {% for comment in comments %}
+          <div class="card mb-2">
+              <div class="card-body">
+                  <p>{{ comment.content }}</p>
+                  <small class="text-muted">
+                      By {{ comment.user.username|default:"Anonymous" }} on {{ comment.created_at|date:"F d, Y" }}
+                  </small>
+              </div>
+          </div>
+      {% empty %}
+          <p>No comments yet. Be the first to comment!</p>
+      {% endfor %}
+  </div>
+
+  <div>
+      <h4>Add a Comment</h4>
+      <form id="comment-form" method="post">
+          {% csrf_token %}
+          {{ comment_form.as_p }}
+          <button type="submit" class="btn btn-primary">Submit Comment</button>
+      </form>
+  </div>
+  <div id="comments">
+    {% for comment in comments %}
+        {% include 'blog/comment_partial.html' with comment=comment %}
+    {% endfor %}
+  </div>
+  <button id="like-btn" class="btn btn-outline-primary" data-slug="{{ post.slug }}">
+    <span id="like-count">{{ post.total_likes }}</span> Likes
+  </button>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.getElementById("like-btn").addEventListener("click", function() {
+        let btn = this;
+        let slug = btn.getAttribute("data-slug");
+    
+        fetch(`/post/${slug}/like/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.liked) {
+                btn.classList.add("btn-primary");
+                btn.classList.remove("btn-outline-primary");
+            } else {
+                btn.classList.remove("btn-primary");
+                btn.classList.add("btn-outline-primary");
+            }
+            document.getElementById("like-count").innerText = data.total_likes;
+        });
+    });
+    document.getElementById("comment-form").addEventListener("submit", function(e){
+        e.preventDefault();
+
+        let form = this;
+        let formData = new FormData(form);
+
+        fetch(window.location.href, {
+            method = "POST", 
+            body = formData,
+            headers = {
+                "X-Request-With": "XMLHttpRequest"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.comment_html) {
+                document.getElementById("comments").insertAdjacentHTML("afterbegin", data.comment_html);
+                form.reset();
+            } else {
+                alert("Error submitting comment");
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    });
+</script>
+
+{% endblock %}
