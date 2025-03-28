@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-9b8%m55!w)njljl01s25=n7qm80#r9&!1@)0me!&k#=ph7ske_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mytechblog.heroku.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -108,6 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LOGIN_REDIRECT_URL = 'blog.dashboard'
+LOGIN_URL = '/login/'
 LOGOUT_REDIRECT_URL = 'blog.home'
 
 
